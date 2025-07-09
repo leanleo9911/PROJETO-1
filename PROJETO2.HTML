@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+ <html lang="pt-BR">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Interação com Círculo, Caixas e Lua/Sol</title>
+     <style>
+         body {
+             margin: 0;
+             display: flex;
+             flex-direction: column;
+             justify-content: center;
+             align-items: center;
+             min-height: 100vh;
+             background-color: black;
+             font-family: Arial, sans-serif;
+             color: white;
+             transition: background-color 0.5s ease; /* Transição suave para a mudança de cor de fundo */
+             position: relative; /* Necessário para posicionar a lua/sol */
+         }
+
+         .top-right-image {
+             position: absolute;
+             top: 20px;
+             right: 20px;
+             width: 50px; /* Tamanho da imagem */
+             height: 50px;
+             cursor: pointer;
+             transition: opacity 0.3s ease; /* Transição suave para hover */
+         }
+
+         .top-right-image:hover {
+             opacity: 0.8;
+         }
+
+         .container {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             gap: 20px; /* Espaço entre o círculo e as caixas */
+         }
+
+         .circle-wrapper {
+             width: 200px; /* Tamanho do círculo */
+             height: 200px;
+             border-radius: 50%;
+             background-color: purple;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             overflow: hidden; /* Garante que a imagem da Terra fique dentro do círculo */
+             transition: background-color 0.3s ease; /* Transição suave de cor */
+             cursor: pointer;
+         }
+
+         .circle-wrapper img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover; /* Garante que a imagem preencha o círculo */
+             display: none; /* Imagem da Terra inicialmente oculta */
+         }
+
+         .interaction-boxes {
+             display: flex;
+             gap: 20px; /* Espaço entre as caixas SIM e NÃO */
+         }
+
+         .box {
+             width: 150px;
+             height: 80px;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             font-size: 24px;
+             font-weight: bold;
+             border-radius: 8px;
+             cursor: pointer;
+             transition: transform 0.2s ease-in-out; /* Efeito ao clicar */
+         }
+
+         .box:active {
+             transform: scale(0.95); /* Pequeno encolhimento ao clicar */
+         }
+
+         .box.yes {
+             background-color: green;
+         }
+
+         .box.no {
+             background-color: red;
+         }
+     </style>
+ </head>
+ <body>
+
+     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/800px-FullMoon2010.jpg" alt="Lua" class="top-right-image" id="topRightImage">
+
+     <div class="container">
+         <div class="circle-wrapper" id="myCircle">
+             </div>
+
+         <div class="interaction-boxes">
+             <div class="box yes" onclick="alert('Você clicou em SIM!')">SIM</div>
+             <div class="box no" onclick="alert('Você clicou em NÃO!')">NÃO</div>
+         </div>
+     </div>
+
+     <script>
+         const circle = document.getElementById('myCircle');
+         const body = document.body;
+         const topRightImage = document.getElementById('topRightImage');
+         let isMoon = true;
+
+         circle.addEventListener('mouseenter', () => {
+             if (!circle.querySelector('img')) {
+                 const earthImage = document.createElement('img');
+                 earthImage.src = 'https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg';
+                 earthImage.alt = 'Planeta Terra';
+                 circle.appendChild(earthImage);
+             }
+             circle.style.backgroundColor = 'transparent';
+             circle.querySelector('img').style.display = 'block';
+         });
+
+         circle.addEventListener('mouseleave', () => {
+             if (circle.querySelector('img')) {
+                 circle.querySelector('img').style.display = 'none';
+             }
+             circle.style.backgroundColor = 'purple';
+         });
+
+         topRightImage.addEventListener('mouseenter', () => {
+             body.style.backgroundColor = 'white';
+             if (isMoon) {
+                 topRightImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg/800px-The_Sun_by_the_Atmospheric_Imaging_Assembly_of_NASA%27s_Solar_Dynamics_Observatory_-_20100819.jpg';
+                 topRightImage.alt = 'Sol';
+                 isMoon = false;
+             }
+         });
+
+         topRightImage.addEventListener('mouseleave', () => {
+             body.style.backgroundColor = 'black';
+             if (!isMoon) {
+                 topRightImage.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/800px-FullMoon2010.jpg';
+                 topRightImage.alt = 'Lua';
+                 isMoon = true;
+             }
+         });
+     </script>
+
+ </body>
+ </html>
